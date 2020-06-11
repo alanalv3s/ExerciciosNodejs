@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do</title>
+</head>
+
+<body>
+    <div id="app">
+        <ul></ul>
+        <input type="text" name="" id="" placeholder="Digite um To-Do">
+        <button>Adicionar</button>
+    </div>
+</body>
+
+<script>
+    let listElement = document.querySelector('#app ul')
+    let inputElement = document.querySelector('#app input')
+    let buttonElement = document.querySelector('#app button')
+
+    var todos = [
+        'Fazer café',
+        'Estudar Javascript',
+        'Acessar comunidade'
+    ]
+
+    function renderTodos() {
+        listElement.innerHTML= "";
+
+        for(todo of todos) {
+            let todoElement = document.createElement('li')
+            let todoText = document.createTextNode(todo)
+
+            let linkElement = document.createElement('a')
+            linkElement.setAttribute('href', '#')
+            let linkText = document.createTextNode("Excluir")
+
+            linkElement.appendChild(linkText)
+
+            let position = todos.indexOf(todo)
+            linkElement.setAttribute('onclick', `deleteTodo(${position})`)
+
+            todoElement.appendChild(todoText)
+            todoElement.appendChild(linkElement)
+
+            listElement.appendChild(todoElement)
+        }
+    }
+
+    renderTodos()
+
+    function addTodo() {
+        let todoText = inputElement.value
+        todos.push(todoText)
+        inputElement.value= ""
+        renderTodos();
+    }
+
+    buttonElement.onclick = addTodo;
+
+    function deleteTodo(position) {
+        todos.splice(position, 1)
+        renderTodos()
+    }
+
+</script>
+
+</html>

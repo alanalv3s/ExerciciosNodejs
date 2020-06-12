@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Github API</title>
+</head>
+
+<body>
+    <div id="app">
+        <input type="text" name="user" placeholder="Digite o nome do usuário">
+        <button onclick="getRepos()">Buscar</button>
+        <ul></ul>
+
+        <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+        <script>
+            const listElement = document.querySelector('#app ul')
+            const inputElement = document.querySelector('#app input')
+            const buttonElement = document.querySelector('#app button')
+
+            function getRepos() {
+                const inputText = inputElement.value
+
+                axios.get(`https://api.github.com/users/${inputText}/repos`)
+                    .then((response) => {
+                        let repos = response.data
+
+                        for(let repo of repos) {
+                            let repoElement = document.createElement('li')
+                            let repoName = document.createTextNode(`${repo.name}`)
+
+                            repoElement.appendChild(repoName)
+                            listElement.appendChild(repoElement)
+                        }
+                    })
+                    .catch((error) => {
+                        console.warn(error)
+                    })
+            }
+
+        </script>
+    </div>
+</body>

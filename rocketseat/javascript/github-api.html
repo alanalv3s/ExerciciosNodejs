@@ -6,11 +6,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Github API</title>
 </head>
+<style>
+    .msg-loading {
+        font-size: 2em;
+        text-align: center;
+        margin: 0 auto;
+        color: red;
+    }
+</style>
 
 <body style="text-align: center;">
     <div id="app">
         <h2>Veja em lista todos os repositórios de um usuário no GitHub!</h2>
-        <input type="text" name="user" id="user" placeholder="Insira o nome do usuário">
+        <input type="text" name="user" id="user" placeholder="Insira o nome do usuário (ex: alanalv3s)"
+            style="width: 15%;">
         <button onclick="getRepos()">Buscar</button>
         <ul></ul>
 
@@ -22,12 +31,21 @@
 
             function getRepos() {
                 const inputText = inputElement.value
+                const loading = document.createElement('div');
+
+                loading.classList.add('msg-loading');
+                loading.innerText = 'Carregando...';
+                listElement.appendChild(loading);
+
 
                 axios.get(`https://api.github.com/users/${inputText}/repos`)
                     .then((response) => {
+                        listElement.innerHTML=""
+
                         let repos = response.data
 
-                        for(let repo of repos) {
+                        loading.innerText = '';
+                        for (let repo of repos) {
                             let repoListItem = document.createElement('li')
                             let repoLink = document.createElement('a')
                             repoLink.setAttribute('href', `${repo.html_url}`)

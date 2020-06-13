@@ -1,8 +1,11 @@
+import api from './api'
+
 class App {
     constructor() {
         this.repositories = []
 
         this.formEL = document.querySelector('#repo-form')
+        this.inputEL = document.querySelector('input[name=repo]')
         this.listEL = document.querySelector('#repo-list')
 
         this.registerHandlers();
@@ -12,15 +15,26 @@ class App {
         this.formEL.onsubmit = event => this.addRepository(event)
     }
 
-    addRepository(event) {
+    async addRepository(event) {
         event.preventDefault();
 
+        const repoInput = this.inputEL.value
+        if (repoInput.length === 0)
+            return
+
+        const response = await api.get(`/repos/${repoInput}`)
+        const { name, description, html_url, owner: { avatar_url } } = response.data
+
+        console.log(response.data)
+
         this.repositories.push({
-            name: 'rocketseat.com.br',
-            description: 'Tire a sua ideia do papel e dê vida à sua startup',
-            avatar_url: 'https://avatars0.githubusercontent.com/u/28929274?v=4',
-            html_url: 'http://github.com/rocketseat/rocketseat.com.br'
+            name,
+            description,
+            avatar_url,
+            html_url
         })
+
+        this.inputEL.value = ""
 
         this.render()
     }
@@ -39,6 +53,7 @@ class App {
             descriptionEl.appendChild(document.createTextNode(repo.description))
 
             let linkEl = document.createElement('a')
+            linkEl.setAttribute('href', `${repo.html_url}`)
             linkEl.setAttribute('target', '_blank')
             linkEl.appendChild(document.createTextNode('Acessar'))
 
